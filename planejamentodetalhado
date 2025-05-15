@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seu Roteiro de Viagem</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        .hero-section {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="600" viewBox="0 0 1200 600"><rect width="1200" height="600" fill="%23007bff"/><path d="M0,400 Q300,350 600,450 T1200,400 V600 H0 Z" fill="%230056b3"/><circle cx="900" cy="150" r="80" fill="%23ffcc00" opacity="0.9"/></svg>');
+            background-size: cover;
+            background-position: center;
+            height: 70vh;
+        }
+        .day-tab.active {
+            background-color: #3b82f6;
+            color: white;
+        }
+        .day-content {
+            display: none;
+        }
+        .day-content.active {
+            display: block;
+        }
+        .attraction-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .map-marker {
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .map-marker:hover {
+            transform: scale(1.2);
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <header class="hero-section flex items-center justify-center text-white">
+        <div class="container mx-auto text-center px-4">
+            <h1 class="text-5xl md:text-6xl font-bold mb-6">Seu roteiro para Paris</h1>
+            <h2 class="text-2xl md:text-3xl mb-8">15 de Junho a 22 de Junho de 2023</h2>
+            <button id="download-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full transition duration-300 transform hover:scale-105">
+                Baixe seu roteiro completo
+            </button>
+        </div>
+    </header>
+
+    <!-- Resumo do Roteiro -->
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">Resumo da Viagem</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Voos -->
+                <div class="bg-blue-50 rounded-lg p-6 shadow-md">
+                    <h3 class="text-xl font-semibold mb-4 text-blue-700">Voos</h3>
+                    <div class="space-y-4">
+                        <div class="border-b pb-3">
+                            <p class="font-medium">Ida: 15 de Junho</p>
+                            <p>Air France AF443</p>
+                            <p>GRU → CDG: 22:00 - 14:30 (+1)</p>
+                            <p class="text-blue-600 font-medium">R$ 3.450,00</p>
+                        </div>
+                        <div>
+                            <p class="font-medium">Volta: 22 de Junho</p>
+                            <p>Air France AF442</p>
+                            <p>CDG → GRU: 16:00 - 22:30</p>
+                            <p class="text-blue-600 font-medium">R$ 3.250,00</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Hotéis -->
+                <div class="bg-blue-50 rounded-lg p-6 shadow-md">
+                    <h3 class="text-xl font-semibold mb-4 text-blue-700">Hotel</h3>
+                    <div class="flex flex-col items-center">
+                        <div class="w-full h-40 bg-gray-200 rounded-lg mb-3 overflow-hidden">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 120" class="w-full h-full">
+                                <rect width="200" height="120" fill="#e2e8f0"/>
+                                <rect x="20" y="20" width="160" height="80" fill="#cbd5e1"/>
+                                <rect x="30" y="30" width="50" height="60" fill="#94a3b8"/>
+                                <rect x="90" y="30" width="80" height="30" fill="#94a3b8"/>
+                                <rect x="90" y="70" width="30" height="20" fill="#94a3b8"/>
+                                <rect x="130" y="70" width="40" height="20" fill="#94a3b8"/>
+                            </svg>
+                        </div>
+                        <h4 class="font-semibold text-lg">Hotel Le Marais</h4>
+                        <div class="flex items-center mt-1 mb-2">
+                            <div class="flex text-yellow-400">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                </svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                </svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                </svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                </svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-300" viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                </svg>
+                            </div>
+                            <span class="ml-1">4.2/5</span>
+                        </div>
+                        <p class="text-gray-600">Le Marais, Paris</p>
+                        <p class="text-blue-600 font-medium mt-2">€180/noite</p>
+                    </div>
+                </div>
+                
+                <!-- Principais Atrações -->
+                <div class="bg-blue-50 rounded-lg p-6 shadow-md">
+                    <h3 class="text-xl font-semibold mb-4 text-blue-700">Principais Atrações</h3>
+                    <ul class="space-y-2">
+                        <li class="flex items-center">
+                            <span class="text-blue-500 mr-2">✓</span>
+                            <span>Torre Eiffel</span>
+                        </li>
+                        <li class="flex items-center">
+                            <span class="text-blue-500 mr-2">✓</span>
+                            <span>Museu do Louvre</span>
+                        </li>
+                        <li class="flex items-center">
+                            <span class="text-blue-500 mr-2">✓</span>
+                            <span>Catedral de Notre-Dame</span>
+                        </li>
+                        <li class="flex items-center">
+                            <span class="text-blue-500 mr-2">✓</span>
+                            <span>Arco do Triunfo</span>
+                        </li>
+                        <li class="flex items-center">
+                            <span class="text-blue-500 mr-2">✓</span>
+                            <span>Montmartre</span>
+                        </li>
+                        <li class="flex items-center">
+                            <span class="text-blue-500 mr-2">✓</span>
+                            <span>Palácio de Versalhes</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Detalhamento por Dia -->
+    <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">Roteiro Diário</h2>
+            
+            <!-- Tabs para os dias -->
+            <div class="flex flex-wrap justify-center mb-8">
+                <button class="day-tab active px-4 py-2 mx-1 mb-2 rounded-md font-medium transition-colors duration-200" data-day="1">Dia 1</button>
+                <button class="day-tab px-4 py-2 mx-1 mb-2 rounded-md font-medium transition-colors duration-200" data-day="2">Dia 2</button>
+                <button class="day-tab px-4 py-2 mx-1 mb-2 rounded-md font-medium transition-colors duration-200" data-day="3">Dia 3</button>
+                <button class="day-tab px-4 py-2 mx-1 mb-2 rounded-md font-medium transition-colors duration-200" data-day="4">Dia 4</button>
+                <button class="day-tab px-4 py-2 mx-1 mb-2 rounded-md font-medium transition-colors duration-200" data-day="5">Dia 5</button>
+                <button class="day-tab px-4 py-2 mx-1 mb-2 rounded-md font-medium transition-colors duration-200" data-day="6">Dia 6</button>
+                <button class="day-tab px-4 py-2 mx-1 mb-2 rounded-md font-medium transition-colors duration-200" data-day="7">Dia 7</button>
+            </div>
+            
+            <!-- Conteúdo dos dias -->
+            <div class="day-content active" id="day-1">
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-2xl font-bold mb-4">Dia 1: Chegada e Torre Eiffel</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div>
+                            <h4 class="text-lg font-semibold mb-3 text-blue-700">Programação</h4>
+                            <ul class="space-y-4">
+                                <li class="flex">
+                                    <div class="mr-4 flex-shrink-0">
+                                        <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium">14:30 - 16:00</p>
+                                        <p>Chegada ao Aeroporto Charles de Gaulle</p>
+                                    </div>
+                                </li>
+                                <li class="flex">
+                                    <div class="mr-4 flex-shrink-0">
+                                        <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                                <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium">16:30 - 17:30</p>
+                                        <p>Check-in no Hotel Le Marais</p>
+                                    </div>
+                                </li>
+                                <li class="flex">
+                                    <div class="mr-4 flex-shrink-0">
+                                        <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                                <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                                                <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium">18:30 - 21:00</p>
+                                        <p>Visita à Torre Eiffel e jantar no restaurante 58 Tour Eiffel</p>
+                                    </div>
+                                </li>
+                            </ul>
+                            
+                            <h4 class="text-lg font-semibold mt-8 mb-3 text-blue-700">Dicas</h4>
+                            <ul class="space-y-2 text-gray-700">
+                                <li class="flex items-start">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500 mr-2 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                                    </svg>
+                                    <span>Compre ingressos para a Torre Eiffel com antecedência para evitar filas</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500 mr-2 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                                    </svg>
+                                    <span>O transporte do aeroporto para o hotel pode ser feito de táxi (€50-60) ou trem RER B + metrô (€10-15)</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500 mr-2 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                                    </svg>
+                                    <span>A Torre Eiffel é mais bonita à noite quando está iluminada</span>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            <div class="bg-gray-100 rounded-lg p-4 h-64 mb-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 200" class="w-full h-full">
+                                    <rect width="300" height="200" fill="#e5e7eb"/>
+                                    <rect x="20" y="20" width="260" height="160" fill="#d1d5db" rx="5"/>
+                                    <circle cx="150" cy="100" r="40" fill="#9ca3af"/>
+                                    <text x="150" y="105" text-anchor="middle" fill="#fff" font-family="Arial" font-size="12">Mapa do Dia 1</text>
+                                    <circle cx="150" cy="60" r="5" fill="#ef4444"/>
+                                    <circle cx="120" cy="120" r="5" fill="#ef4444"/>
+                                    <circle cx="180" cy="130" r="5" fill="#ef4444"/>
+                                </svg>
+                            </div>
+                            <div class="flex justify-center">
+                                <a href="https://goo.gl/maps/1DGM5WrWnATgkSNB8" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md flex items-center transition duration-300">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
+                                    </svg>
+                                    Ver no Google Maps
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="day-content" id="day-2">
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-2xl font-bold mb-4">Dia 2: Museu do Louvre e Jardim das Tulherias</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div>
+                            <h4 class="text-lg font-semibold mb-3 text-blue-700">Programação</h4>
+                            <ul class="space-y-4">
+                                <li class="flex">
+                                    <div class="mr-4 flex-shrink-0">
+                                        <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium">09:00 - 13:00</p>
+                                        <p>Visita ao Museu do Louvre</p>
+                                    </div>
+                                </li>
+                                <li class="flex">
+                                    <div class="mr-4 flex-shrink-0">
+                                        <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                                <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium">13:30 - 14:30</p>
+                                        <p>Almoço no Café Marly</p>
+                                    </div>
+                                </li>
+                                <li class="flex">
+                                    <div class="mr-4 flex-shrink-0">
+                                        <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                                <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium">15:00 - 17:00</p>
+                                        <p>Passeio pelo Jardim das Tulherias e Place de la Concorde</p>
+                                    </div>
+                                </li>
+                                <li class="flex">
+                                    <div class="mr-4 flex-shrink-0">
+                                        <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                                <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                                                <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium">18:00 - 20:00</p>
+                                        <p>Compras na Champs-Élysées</p>
+                                    </div>
+                                </li>
+                            </ul>
+                            
+                            <h4 class="text-lg font-semibold mt-8 mb-3 text-blue-700">Dicas</h4>
+                            <ul class="space-y-2 text-gray-700">
+                                <li class="flex items-start">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500 mr-2 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                                    </svg>
+                                    <span>Entre no Louvre pela entrada do Carrousel du Louvre para evitar filas</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500 mr-2 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                                    </svg>
+                                    <span>Não tente ver todo o Louvre em um dia - foque nas obras principais</span>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            <div class="bg-gray-100 rounded-lg p-4 h-64 mb-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 200" class="w-full h-full">
+                                    <rect width="300" height="200" fill="#e5e7eb"/>
+                                    <rect x="20" y="20" width="260" height="160" fill="#d1d5db" rx="5"/>
+                                    <polygon points="150,50 120,80 180,80" fill="#9ca3af"/>
+                                    <rect x="120" y="80" width="60" height="60" fill="#9ca3af"/>
+                                    <text x="150" y="105" text-anchor="middle" fill="#fff" font-family="Arial" font-size="12">Mapa do Dia 2</text>
+                                    <circle cx="150" cy="60" r="5" fill="#ef4444"/>
+                                    <circle cx="120" cy="120" r="5" fill="#ef4444"/>
+                                    <circle cx="180" cy="130" r="5" fill="#ef4444"/>
+                                </svg>
+                            </div>
+                            <div class="flex justify-center">
+                                <a href="https://goo.gl/maps/1DGM5WrWnATgkSNB8" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md flex items-center transition duration-300">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
+                                    </svg>
+                                    Ver no Google Maps
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Conteúdo para os outros dias (simplificado) -->
+            <div class="day-content" id="day-3">
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-2xl font-bold mb-4">Dia 3: Notre-Dame e Île de la Cité</h3>
+                    <p class="text-gray-600 mb-4">Explore a histórica Île de la Cité, visite a Catedral de Notre-Dame (exterior devido à reconstrução), Sainte-Chapelle e a Conciergerie.</p>
+                    <p class="text-blue-600 font-medium">Clique na aba para ver detalhes completos.</p>
+                </div>
+            </div>
+            
+            <div class="day-content" id="day-4">
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-2xl font-bold mb-4">Dia 4: Montmartre e Sacré-Cœur</h3>
+                    <p class="text-gray-600 mb-4">Descubra o charmoso bairro de Montmartre, visite a Basílica de Sacré-Cœur e aprecie a vista panorâmica de Paris.</p>
+                    <p class="text-blue-600 font-medium">Clique na aba para ver detalhes completos.</p>
+                </div>
+            </div>
+            
+            <div class="day-content" id="day-5">
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-2xl font-bold mb-4">Dia 5: Palácio de Versalhes</h3>
+                    <p class="text-gray-600 mb-4">Excursão de dia inteiro ao magnífico Palácio de Versalhes e seus jardins espetaculares.</p>
+                    <p class="text-blue-600 font-medium">Clique na aba para ver detalhes completos.</p>
+                </div>
+            </div>
+            
+            <div class="day-content" id="day-6">
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-2xl font-bold mb-4">Dia 6: Museu d'Orsay e Quartier Latin</h3>
+                    <p class="text-gray-600 mb-4">Visite o Museu d'Orsay e explore o histórico Quartier Latin e o Jardim de Luxemburgo.</p>
+                    <p class="text-blue-600 font-medium">Clique na aba para ver detalhes completos.</p>
+                </div>
+            </div>
+            
+            <div class="day-content" id="day-7">
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-2xl font-bold mb-4">Dia 7: Compras e Partida</h3>
+                    <p class="text-gray-600 mb-4">Últimas compras nas Galerias Lafayette, almoço de despedida e traslado para o aeroporto.</p>
+                    <p class="text-blue-600 font-medium">Clique na aba para ver detalhes completos.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mapa Interativo -->
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">Mapa Interativo</h2>
+            
+            <div class="bg-gray-100 rounded-lg p-4 h-96 mb-6 relative">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" class="w-full h-full">
+                    <rect width="800" height="400" fill="#e5e7eb"/>
+                    <path d="M200,100 Q400,50 600,150 T800,200" stroke="#3b82f6" stroke-width="3" fill="none"/>
+                    <path d="M0,200 Q200,250 400,150 T800,250" stroke="#3b82f6" stroke-width="2" fill="none"/>
+                    <rect x="100" y="100" width="600" height="250" fill="none" stroke="#9ca3af" stroke-width="1" stroke-dasharray="5,5"/>
+                    
+                    <!-- Pontos de interesse -->
+                    <g class="map-marker" data-name="Torre Eiffel" data-address="Champ de Mars, 5 Avenue Anatole France, 75007 Paris, França">
+                        <circle cx="250" cy="200" r="10" fill="#ef4444"/>
+                        <text x="250" y="230" text-anchor="middle" fill="#000" font-family="Arial" font-size="12">Torre Eiffel</text>
+                    </g>
+                    
+                    <g class="map-marker" data-name="Museu do Louvre" data-address="Rue de Rivoli, 75001 Paris, França">
+                        <circle cx="350" cy="150" r="10" fill="#ef4444"/>
+                        <text x="350" y="180" text-anchor="middle" fill="#000" font-family="Arial" font-size="12">Louvre</text>
+                    </g>
+                    
+                    <g class="map-marker" data-name="Notre-Dame" data-address="6 Parvis Notre-Dame - Pl. Jean-Paul II, 75004 Paris, França">
+                        <circle cx="400" cy="180" r="10" fill="#ef4444"/>
+                        <text x="400" y="210" text-anchor="middle" fill="#000" font-family="Arial" font-size="12">Notre-Dame</text>
+                    </g>
+                    
+                    <g class="map-marker" data-name="Arco do Triunfo" data-address="Place Charles de Gaulle, 75008 Paris, França">
+                        <circle cx="200" cy="150" r="10" fill="#ef4444"/>
+                        <text x="200" y="180" text-anchor="middle" fill="#000" font-family="Arial" font-size="12">Arco do Triunfo</text>
+                    </g>
+                    
+                    <g class="map-marker" data-name="Montmartre" data-address="Montmartre, 75018 Paris, França">
+                        <circle cx="300" cy="100" r="10" fill="#ef4444"/>
+                        <text x="300" y="130" text-anchor="middle" fill="#000" font-family="Arial" font-size="12">Montmartre</text>
+                    </g>
+                    
+                    <g class="map-marker" data-name="Palácio de Versalhes" data-address="Place d'Armes, 78000 Versailles, França">
+                        <circle cx="100" cy="250" r="10" fill="#ef4444"/>
+                        <text x="100" y="280" text-anchor="middle" fill="#000" font-family="Arial" font-size="12">Versalhes</text>
+                    </g>
+                    
+                    <g class="map-marker" data-name="Hotel Le Marais" data-address="Le Marais, Paris, França">
+                        <circle cx="370" cy="200" r="10" fill="#3b82f6"/>
+                        <text x="370" y="230" text-anchor="middle" fill="#000" font-family="Arial" font-size="12">Hotel</text>
+                    </g>
+                </svg>
+                
+                <!-- Info box -->
+                <div id="map-info-box" class="hidden absolute bg-white p-4 rounded-lg shadow-lg border border-gray-200 w-64">
+                    <h4 id="map-info-title" class="font-bold text-lg mb-1"></h4>
+                    <p id="map-info-address" class="text-gray-600 text-sm mb-3"></p>
+                    <a id="map-info-link" href="#" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white text-sm py-1 px-3 rounded-md inline-flex items-center transition duration-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
+                        </svg>
+                        Ver no Google Maps
+                    </a>
+                </div>
+            </div>
+            
+            <div class="text-center">
+                <p class="text-gray-600 mb-4">Clique nos pontos para ver detalhes e abrir no Google Maps</p>
+                <a href="https://goo.gl/maps/1DGM5WrWnATgkSNB8" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded-md inline-flex items-center transition duration-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
+                    </svg>
+                    Ver roteiro completo no Google Maps
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção de Extras -->
+    <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">Extras e Recomendações</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Restaurantes -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                    <div class="bg-blue-600 text-white p-4">
+                        <h3 class="text-xl font-bold">Restaurantes Recomendados</h3>
+                    </div>
+                    <div class="p-6">
+                        <ul class="space-y-4">
+                            <li>
+                                <h4 class="font-semibold">Le Jules Verne</h4>
+                                <p class="text-gray-600 text-sm">Restaurante gourmet na Torre Eiffel</p>
+                                <div class="flex items-center mt-1">
+                                    <div class="flex text-yellow-400">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                        </svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                        </svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                        </svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                        </svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                        </svg>
+                                    </div>
+                                    <span class="ml-1 text-sm">€€€€</span>
+                                </div>
+                            </li>
+                            <li>
+                                <h4 class="font-semibold">Café de Flore</h4>
+                                <p class="text-gray-600 text-sm">Café histórico em Saint-Germain</p>
+                                <div class="flex items-center mt-1">
+                                    <div class="flex text-yellow-400">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                        </svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                        </svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                        </svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                        </svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-300" viewBox="0 0 20 20" fill="currentColor">
+                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                        </svg>
+                                    </div>
+                                    <span class="ml-1 text-sm">€€€</span>
+                                </div>
+                            </li>
+                            <li>
+                                <h4 class="font-semibold">L'As du Fallafel</h4>
+                                <p class="text-gray-600 text-sm">Melhor falafel de Paris no Marais</p>
+                                <div class="flex items-center mt-1">
+                                    <div class="flex text-yellow-400">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                        </svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                        </svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                        </svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                        </svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-300" viewBox="0 0 20 20" fill="currentColor">
+                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                        </svg>
+                                    </div>
+                                    <span class="ml-1 text-sm">€</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Tours -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                    <div class="bg-blue-600 text-white p-4">
+                        <h3 class="text-xl font-bold">Tours Recomendados</h3>
+                    </div>
+                    <div class="p-6">
+                        <ul class="space-y-4">
+                            <li>
+                                <h4 class="font-semibold">Cruzeiro pelo Rio Sena</h4>
+                                <p class="text-gray-600 text-sm">Veja Paris de uma perspectiva diferente</p>
+                                <p class="text-blue-600 font-medium mt-1">€15 por pessoa</p>
+                                <div class="mt-2">
+                                    <span class="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">Cupom: SEINE10</span>
+                                </div>
+                            </li>
+                            <li>
+                                <h4 class="font-semibold">Tour de Bicicleta</h4>
+                                <p class="text-gray-600 text-sm">Explore Paris pedalando com guia local</p>
+                                <p class="text-blue-600 font-medium mt-1">€35 por pessoa</p>
+                                <div class="mt-2">
+                                    <span class="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">Cupom: BIKE15</span>
+                                </div>
+                            </li>
+                            <li>
+                                <h4 class="font-semibold">Tour Gastronômico em Montmartre</h4>
+                                <p class="text-gray-600 text-sm">Degustação de queijos, vinhos e pães</p>
+                                <p class="text-blue-600 font-medium mt-1">€75 por pessoa</p>
+                                <div class="mt-2">
+                                    <span class="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">Cupom: FOOD20</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Dicas Extras -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                    <div class="bg-blue-600 text-white p-4">
+                        <h3 class="text-xl font-bold">Dicas Extras</h3>
+                    </div>
+                    <div class="p-6">
+                        <ul class="space-y-4">
+                            <li class="flex items-start">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500 mr-2 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                                </svg>
+                                <span>Compre o Paris Museum Pass para economizar em entradas</span>
+                            </li>
+                            <li class="flex items-start">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500 mr-2 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                                </svg>
+                                <span>Utilize o metrô para se locomover - compre um pacote de 10 tickets (carnet)</span>
+                            </li>
+                            <li class="flex items-start">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500 mr-2 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                                </svg>
+                                <span>Museus nacionais são gratuitos no primeiro domingo de cada mês</span>
+                            </li>
+                            <li class="flex items-start">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500 mr-2 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                                </svg>
+                                <span>Tenha sempre um pouco de dinheiro em espécie para pequenas compras</span>
+                            </li>
+                            <li class="flex items-start">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500 mr-2 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                                </svg>
+                                <span>Aprenda algumas frases básicas em francês - os parisienses apreciam o esforço</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Formulário de Feedback -->
+    <section class="py-16 bg-blue-50">
+        <div class="container mx-auto px-4">
+            <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-8">
+                <h2 class="text-3xl font-bold text-center mb-8">Gostou do seu roteiro?</h2>
+                
+                <div class="text-center mb-8">
+                    <p class="text-lg mb-4">Compartilhe este roteiro com seus amigos!</p>
+                    <div class="flex justify-center space-x-4">
+                        <button id="share-whatsapp" class="bg-green-500 hover:bg-green-600 text-white p-3 rounded-full transition duration-300">
+                            <i class="fab fa-whatsapp text-xl"></i>
+                        </button>
+                        <button id="share-facebook" class="bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full transition duration-300">
+                            <i class="fab fa-facebook-f text-xl"></i>
+                        </button>
+                        <button id="share-twitter" class="bg-blue-400 hover:bg-blue-500 text-white p-3 rounded-full transition duration-300">
+                            <i class="fab fa-twitter text-xl"></i>
+                        </button>
+                        <button id="share-email" class="bg-red-500 hover:bg-red-600 text-white p-3 rounded-full transition duration-300">
+                            <i class="fas fa-envelope text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="border-t pt-8">
+                    <h3 class="text-xl font-semibold mb-4 text-center">Deixe seu feedback</h3>
+                    ```
